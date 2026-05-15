@@ -43,14 +43,30 @@ document.addEventListener('DOMContentLoaded', () => {
         autoPlayInterval: null
     };
 
-    function highlightVar(type, index = null) {
+    function highlightVar(type, index, pid, action) {
         let el;
-        if (type === 'lock') el = DOM.boxes.lock;
-        else el = DOM.boxes.waiting[index];
+        let marker;
+        if (type === 'lock') {
+            el = DOM.boxes.lock;
+            marker = document.getElementById('marker-cas-lock');
+        } else {
+            el = DOM.boxes.waiting[index];
+            marker = document.getElementById(`marker-cas-waiting${index}`);
+        }
         
         if (el) {
             el.classList.add('highlight');
             setTimeout(() => el.classList.remove('highlight'), 500);
+        }
+        
+        if (marker && pid !== undefined) {
+            marker.textContent = `← P${pid} ${action}`;
+            let color = '#60a5fa'; // P0
+            if (pid === 1) color = '#fbbf24'; // P1
+            if (pid === 2) color = '#a78bfa'; // P2
+            marker.style.color = color;
+            marker.classList.add('show');
+            setTimeout(() => marker.classList.remove('show'), 800);
         }
     }
 
@@ -142,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         switch(state.pc[i]) {
             case 1: // waiting[i] = true
                 state.waiting[i] = true;
-                highlightVar('waiting', i);
+                highlightVar('waiting', i, i, 'writing');
                 nextPc = 2;
                 break;
             case 2: // key = 1
@@ -150,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 nextPc = 3;
                 break;
             case 3: // while(waiting[i] && key == 1)
+                highlightVar('waiting', i, i, 'reading');
                 if (state.waiting[i] && state.key[i] === 1) {
                     nextPc = 4;
                 } else {
@@ -164,12 +181,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     state.key[i] = 1;
                 }
-                highlightVar('lock');
+                highlightVar('lock', null, i, 'CAS');
                 nextPc = 3;
                 break;
             case 5: // waiting[i] = false
                 state.waiting[i] = false;
-                highlightVar('waiting', i);
+                highlightVar('waiting', i, i, 'writing');
                 nextPc = 6;
                 break;
             case 6: // CRITICAL SECTION
@@ -180,6 +197,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 nextPc = 8;
                 break;
             case 8: // while((j != i) && !waiting[j])
+                if (state.j[i] !== i) {
+                    highlightVar('waiting', state.j[i], i, 'reading');
+                }
                 if (state.j[i] !== i && !state.waiting[state.j[i]]) {
                     nextPc = 9;
                 } else {
@@ -193,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case 10: // if(j == i) lock = 0; else -> 11
                 if (state.j[i] === i) {
                     state.lock = 0;
-                    highlightVar('lock');
+                    highlightVar('lock', null, i, 'writing');
                     nextPc = 1; // Restart
                 } else {
                     nextPc = 11;
@@ -201,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 11: // else waiting[j] = false
                 state.waiting[state.j[i]] = false;
-                highlightVar('waiting', state.j[i]);
+                highlightVar('waiting', state.j[i], i, 'writing');
                 nextPc = 1; // Restart
                 break;
         }

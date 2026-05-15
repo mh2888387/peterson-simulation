@@ -22,18 +22,30 @@
         <main class="simulation-layout tab-pane active" id="peterson-tab">
             <div class="shared-memory glass-panel">
                 <h2>Shared Memory</h2>
-                <div class="variables">
-                    <div class="var-box" id="flag0-box">
-                        <span class="var-name">flag[0]</span>
-                        <span class="var-value" id="flag0-val">false</span>
+                <div class="memory-stack">
+                    <div class="mem-cell" id="flag0-box">
+                        <span class="mem-addr">0x00</span>
+                        <div class="mem-content">
+                            <span class="var-name">flag[0]</span>
+                            <span class="var-value" id="flag0-val">false</span>
+                        </div>
+                        <div class="mem-marker" id="marker-flag0"></div>
                     </div>
-                    <div class="var-box" id="turn-box">
-                        <span class="var-name">turn</span>
-                        <span class="var-value" id="turn-val">0</span>
+                    <div class="mem-cell" id="turn-box">
+                        <span class="mem-addr">0x04</span>
+                        <div class="mem-content">
+                            <span class="var-name">turn</span>
+                            <span class="var-value" id="turn-val">0</span>
+                        </div>
+                        <div class="mem-marker" id="marker-turn"></div>
                     </div>
-                    <div class="var-box" id="flag1-box">
-                        <span class="var-name">flag[1]</span>
-                        <span class="var-value" id="flag1-val">false</span>
+                    <div class="mem-cell" id="flag1-box">
+                        <span class="mem-addr">0x08</span>
+                        <div class="mem-content">
+                            <span class="var-name">flag[1]</span>
+                            <span class="var-value" id="flag1-val">false</span>
+                        </div>
+                        <div class="mem-marker" id="marker-flag1"></div>
                     </div>
                 </div>
                 <div class="global-controls">
@@ -110,22 +122,38 @@
         <main class="simulation-layout tab-pane" id="cas-tab">
             <div class="shared-memory glass-panel">
                 <h2>Shared Memory (CAS)</h2>
-                <div class="variables">
-                    <div class="var-box" id="cas-lock-box">
-                        <span class="var-name">lock</span>
-                        <span class="var-value" id="cas-lock-val">0</span>
+                <div class="memory-stack">
+                    <div class="mem-cell" id="cas-lock-box">
+                        <span class="mem-addr">0x00</span>
+                        <div class="mem-content">
+                            <span class="var-name">lock</span>
+                            <span class="var-value" id="cas-lock-val">0</span>
+                        </div>
+                        <div class="mem-marker" id="marker-cas-lock"></div>
                     </div>
-                    <div class="var-box" id="cas-waiting0-box">
-                        <span class="var-name">waiting[0]</span>
-                        <span class="var-value" id="cas-waiting0-val">false</span>
+                    <div class="mem-cell" id="cas-waiting0-box">
+                        <span class="mem-addr">0x04</span>
+                        <div class="mem-content">
+                            <span class="var-name">waiting[0]</span>
+                            <span class="var-value" id="cas-waiting0-val">false</span>
+                        </div>
+                        <div class="mem-marker" id="marker-cas-waiting0"></div>
                     </div>
-                    <div class="var-box" id="cas-waiting1-box">
-                        <span class="var-name">waiting[1]</span>
-                        <span class="var-value" id="cas-waiting1-val">false</span>
+                    <div class="mem-cell" id="cas-waiting1-box">
+                        <span class="mem-addr">0x08</span>
+                        <div class="mem-content">
+                            <span class="var-name">waiting[1]</span>
+                            <span class="var-value" id="cas-waiting1-val">false</span>
+                        </div>
+                        <div class="mem-marker" id="marker-cas-waiting1"></div>
                     </div>
-                    <div class="var-box" id="cas-waiting2-box">
-                        <span class="var-name">waiting[2]</span>
-                        <span class="var-value" id="cas-waiting2-val">false</span>
+                    <div class="mem-cell" id="cas-waiting2-box">
+                        <span class="mem-addr">0x0C</span>
+                        <div class="mem-content">
+                            <span class="var-name">waiting[2]</span>
+                            <span class="var-value" id="cas-waiting2-val">false</span>
+                        </div>
+                        <div class="mem-marker" id="marker-cas-waiting2"></div>
                     </div>
                 </div>
                 <div class="global-controls">

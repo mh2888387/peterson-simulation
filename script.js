@@ -119,9 +119,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function highlightVar(varId) {
+    function highlightVar(varId, pid, action) {
         const el = document.getElementById(`${varId}-box`);
+        const marker = document.getElementById(`marker-${varId}`);
         el.classList.add('highlight');
+        
+        if (marker && pid !== undefined) {
+            marker.textContent = `← P${pid} ${action}`;
+            marker.style.color = pid === 0 ? '#60a5fa' : '#fbbf24';
+            marker.classList.add('show');
+            setTimeout(() => marker.classList.remove('show'), 800);
+        }
+        
         setTimeout(() => el.classList.remove('highlight'), 500);
     }
 
@@ -132,15 +141,17 @@ document.addEventListener('DOMContentLoaded', () => {
         switch(state.pc[pid]) {
             case 1: // flag[pid] = true
                 state.flag[pid] = true;
-                highlightVar(`flag${pid}`);
+                highlightVar(`flag${pid}`, pid, 'writing');
                 nextPc = 2;
                 break;
             case 2: // turn = other
                 state.turn = other;
-                highlightVar('turn');
+                highlightVar('turn', pid, 'writing');
                 nextPc = 3;
                 break;
             case 3: // while (flag[other] && turn == other)
+                highlightVar(`flag${other}`, pid, 'reading');
+                setTimeout(() => highlightVar('turn', pid, 'reading'), 300);
                 if (state.flag[other] && state.turn === other) {
                     nextPc = 4; // go to wait
                 } else {
@@ -155,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 7: // flag[pid] = false
                 state.flag[pid] = false;
-                highlightVar(`flag${pid}`);
+                highlightVar(`flag${pid}`, pid, 'writing');
                 nextPc = 1; // Loop back to start
                 break;
         }
