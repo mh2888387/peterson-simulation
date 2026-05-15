@@ -128,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
             marker.textContent = `← P${pid} ${action}`;
             marker.style.color = pid === 0 ? '#60a5fa' : '#fbbf24';
             marker.classList.add('show');
-            setTimeout(() => marker.classList.remove('show'), 800);
         }
 
         setTimeout(() => el.classList.remove('highlight'), 500);
@@ -169,9 +168,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function stepProcess(pid) {
-        // Clear glows at the start of the step
+        // Clear glows and markers at the start of the step
         document.querySelectorAll('#peterson-tab .cv').forEach(el => {
             el.classList.remove('glow-pass', 'glow-block');
+        });
+        document.querySelectorAll('#peterson-tab .mem-marker').forEach(el => {
+            el.classList.remove('show');
         });
 
         const other = 1 - pid;
@@ -228,6 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
             autoPlayInterval: state.autoPlayInterval
         };
         document.querySelectorAll('#peterson-tab .cv').forEach(el => el.classList.remove('glow-pass', 'glow-block'));
+        document.querySelectorAll('#peterson-tab .mem-marker').forEach(el => el.classList.remove('show'));
         updateUI();
         highlightVar('flag0');
         highlightVar('flag1');

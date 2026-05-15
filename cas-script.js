@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pid === 2) color = '#a78bfa'; // P2
             marker.style.color = color;
             marker.classList.add('show');
-            setTimeout(() => marker.classList.remove('show'), 800);
         }
     }
 
@@ -184,9 +183,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function stepProcess(i) {
-        // Clear glows at the start of the step
+        // Clear glows and markers at the start of the step
         document.querySelectorAll('#cas-tab .cv').forEach(el => {
             el.classList.remove('glow-pass', 'glow-block');
+        });
+        document.querySelectorAll('#cas-tab .mem-marker').forEach(el => {
+            el.classList.remove('show');
         });
 
         let nextPc = state.pc[i];
@@ -288,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
             autoPlayInterval: state.autoPlayInterval
         };
         document.querySelectorAll('#cas-tab .cv').forEach(el => el.classList.remove('glow-pass', 'glow-block'));
+        document.querySelectorAll('#cas-tab .mem-marker').forEach(el => el.classList.remove('show'));
         updateUI();
     });
 
