@@ -134,7 +134,45 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => el.classList.remove('highlight'), 500);
     }
 
+    function glowVar(id, type) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove('glow-pass', 'glow-block');
+        void el.offsetWidth;
+        el.classList.add(type === 'pass' ? 'glow-pass' : 'glow-block');
+    }
+
+    function evaluateConditions() {
+        for (let i = 0; i < 2; i++) {
+            const other = 1 - i;
+
+            // Color the flag[other] in the while condition
+            const flagSpan = document.getElementById(`p${i}-cv-flag${other}`);
+            const turnSpan = document.getElementById(`p${i}-cv-turn-cond`);
+            if (!flagSpan || !turnSpan) continue;
+
+            // flag[other]: true = blocking, false = passing
+            if (state.flag[other]) {
+                glowVar(`p${i}-cv-flag${other}`, 'block');
+            } else {
+                glowVar(`p${i}-cv-flag${other}`, 'pass');
+            }
+
+            // turn == other: true = blocking, false = passing
+            if (state.turn === other) {
+                glowVar(`p${i}-cv-turn-cond`, 'block');
+            } else {
+                glowVar(`p${i}-cv-turn-cond`, 'pass');
+            }
+        }
+    }
+
     function stepProcess(pid) {
+        // Clear glows at the start of the step
+        document.querySelectorAll('#peterson-tab .cv').forEach(el => {
+            el.classList.remove('glow-pass', 'glow-block');
+        });
+
         const other = 1 - pid;
         let nextPc = state.pc[pid];
 
@@ -142,11 +180,13 @@ document.addEventListener('DOMContentLoaded', () => {
             case 1: // flag[pid] = true
                 state.flag[pid] = true;
                 highlightVar(`flag${pid}`, pid, 'writing');
+                evaluateConditions();
                 nextPc = 2;
                 break;
             case 2: // turn = other
                 state.turn = other;
                 highlightVar('turn', pid, 'writing');
+                evaluateConditions();
                 nextPc = 3;
                 break;
             case 3: // while (flag[other] && turn == other)
@@ -167,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case 7: // flag[pid] = false
                 state.flag[pid] = false;
                 highlightVar(`flag${pid}`, pid, 'writing');
+                evaluateConditions();
                 nextPc = 1; // Loop back to start
                 break;
         }
@@ -185,6 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pc: [1, 1],
             autoPlayInterval: state.autoPlayInterval
         };
+        document.querySelectorAll('#peterson-tab .cv').forEach(el => el.classList.remove('glow-pass', 'glow-block'));
         updateUI();
         highlightVar('flag0');
         highlightVar('flag1');

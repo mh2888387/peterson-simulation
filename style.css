@@ -478,3 +478,23 @@ header p {
 .occupant.p2 {
     color: #a78bfa;
 }
+
+/* Inline variable glow */
+.cv {
+    padding: 1px 4px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.cv.glow-pass {
+    color: #34d399;
+    text-shadow: 0 0 8px rgba(52, 211, 153, 0.8);
+    background: rgba(52, 211, 153, 0.2);
+}
+
+.cv.glow-block {
+    color: #f87171;
+    text-shadow: 0 0 8px rgba(248, 113, 113, 0.8);
+    background: rgba(248, 113, 113, 0.2);
+}

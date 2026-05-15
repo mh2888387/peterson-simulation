@@ -70,6 +70,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function glowVar(id, type) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove('glow-pass', 'glow-block');
+        void el.offsetWidth;
+        el.classList.add(type === 'pass' ? 'glow-pass' : 'glow-block');
+    }
+
+    function evaluateConditionsCAS() {
+        for (let i = 0; i < 3; i++) {
+            // While loop: while(waiting[i] && key == 1)
+            // waiting[i] in condition: true = blocking, false = passing
+            glowVar(`cas-p${i}-cv-waiting-cond`, state.waiting[i] ? 'block' : 'pass');
+
+            // key == 1 in condition: key=1 means blocking (stays in loop), key=0 means passing (exits loop)
+            glowVar(`cas-p${i}-cv-key-cond`, state.key[i] === 1 ? 'block' : 'pass');
+
+            // key on the CAS line: after CAS, key=0 means lock acquired (pass), key=1 means failed (block)
+            glowVar(`cas-p${i}-cv-key-cas`, state.key[i] === 0 ? 'pass' : 'block');
+
+            // waiting[j] in exit loop: waiting[j]=true means found a waiter (pass/hand off), false means keep scanning (block)
+            if (state.pc[i] >= 8 && state.pc[i] <= 9) {
+                const j = state.j[i];
+                if (j !== i) {
+                    glowVar(`cas-p${i}-cv-waitj`, state.waiting[j] ? 'pass' : 'block');
+                }
+            }
+        }
+    }
+
     function updateUI() {
         DOM.lock.textContent = state.lock.toString();
         for (let i = 0; i < 3; i++) {
@@ -153,16 +183,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function stepProcess(i) {
+        // Clear glows at the start of the step
+        document.querySelectorAll('#cas-tab .cv').forEach(el => {
+            el.classList.remove('glow-pass', 'glow-block');
+        });
+
         let nextPc = state.pc[i];
 
         switch(state.pc[i]) {
             case 1: // waiting[i] = true
                 state.waiting[i] = true;
                 highlightVar('waiting', i, i, 'writing');
+                evaluateConditionsCAS();
                 nextPc = 2;
                 break;
             case 2: // key = 1
                 state.key[i] = 1;
+                evaluateConditionsCAS();
                 nextPc = 3;
                 break;
             case 3: // while(waiting[i] && key == 1)
@@ -182,11 +219,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     state.key[i] = 1;
                 }
                 highlightVar('lock', null, i, 'CAS');
+                evaluateConditionsCAS();
                 nextPc = 3;
                 break;
             case 5: // waiting[i] = false
                 state.waiting[i] = false;
                 highlightVar('waiting', i, i, 'writing');
+                evaluateConditionsCAS();
                 nextPc = 6;
                 break;
             case 6: // CRITICAL SECTION
@@ -194,6 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 7: // j = (i + 1) % 3
                 state.j[i] = (i + 1) % 3;
+                evaluateConditionsCAS();
                 nextPc = 8;
                 break;
             case 8: // while((j != i) && !waiting[j])
@@ -208,12 +248,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 9: // j = (j + 1) % 3
                 state.j[i] = (state.j[i] + 1) % 3;
+                evaluateConditionsCAS();
                 nextPc = 8;
                 break;
             case 10: // if(j == i) lock = 0; else -> 11
                 if (state.j[i] === i) {
                     state.lock = 0;
                     highlightVar('lock', null, i, 'writing');
+                    evaluateConditionsCAS();
                     nextPc = 1; // Restart
                 } else {
                     nextPc = 11;
@@ -222,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case 11: // else waiting[j] = false
                 state.waiting[state.j[i]] = false;
                 highlightVar('waiting', state.j[i], i, 'writing');
+                evaluateConditionsCAS();
                 nextPc = 1; // Restart
                 break;
         }
@@ -243,6 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
             j: [0, 0, 0],
             autoPlayInterval: state.autoPlayInterval
         };
+        document.querySelectorAll('#cas-tab .cv').forEach(el => el.classList.remove('glow-pass', 'glow-block'));
         updateUI();
     });
 
