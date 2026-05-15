@@ -64,29 +64,41 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateStatusVisuals(pid) {
         const statusEl = pid === 0 ? DOM.p0Status : DOM.p1Status;
         const panel = pid === 0 ? DOM.p0Panel : DOM.p1Panel;
+        const semaphore = document.getElementById(`p${pid}-semaphore`);
+        const redLight = semaphore.querySelector('.red');
+        const yellowLight = semaphore.querySelector('.yellow');
+        const greenLight = semaphore.querySelector('.green');
         const pc = state.pc[pid];
         
         panel.classList.remove('active', 'in-cs');
+        redLight.classList.remove('active');
+        yellowLight.classList.remove('active');
+        greenLight.classList.remove('active');
         
         if (pc === 1 || pc === 2) {
             statusEl.textContent = 'Want to enter';
             statusEl.style.color = '#60a5fa';
             panel.classList.add('active');
+            yellowLight.classList.add('active');
         } else if (pc === 3 || pc === 4) {
             statusEl.textContent = 'Waiting';
             statusEl.style.color = '#f87171';
             panel.classList.add('active');
+            redLight.classList.add('active');
         } else if (pc === 6) {
             statusEl.textContent = 'In CS';
             statusEl.style.color = '#34d399';
             panel.classList.add('in-cs');
+            greenLight.classList.add('active');
         } else if (pc === 7) {
             statusEl.textContent = 'Exiting';
             statusEl.style.color = '#a78bfa';
             panel.classList.add('active');
+            yellowLight.classList.add('active');
         } else {
             statusEl.textContent = 'Idle';
             statusEl.style.color = 'inherit';
+            greenLight.classList.add('active');
         }
     }
 
