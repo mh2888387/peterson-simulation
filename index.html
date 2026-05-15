@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peterson's Solution Simulator</title>
-    <meta name="description" content="An interactive visualization of Peterson's Solution for mutual exclusion in Operating Systems.">
+    <meta name="description"
+        content="An interactive visualization of Peterson's Solution for mutual exclusion in Operating Systems.">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div class="app-container">
         <header>
@@ -16,6 +21,16 @@
             <div class="tabs">
                 <button class="tab-btn active" onclick="switchTab('peterson-tab')">Peterson's Solution</button>
                 <button class="tab-btn" onclick="switchTab('cas-tab')">Bounded-Waiting CAS</button>
+            </div>
+            <div class="inline-legend glass-panel">
+                <div class="legend-item-inline">
+                    <span class="legend-color pass-color"></span>
+                    <span>Green &rarr; Reach Critical</span>
+                </div>
+                <div class="legend-item-inline">
+                    <span class="legend-color block-color"></span>
+                    <span>Red &rarr; Prevent Critical</span>
+                </div>
             </div>
         </header>
 
@@ -69,13 +84,17 @@
                         </div>
                     </div>
                     <div class="code-view">
-                        <div class="code-line" id="p0-line-1"><span class="cv" id="p0-cv-flag0">flag[0]</span> = true;</div>
+                        <div class="code-line" id="p0-line-1"><span class="cv" id="p0-cv-flag0">flag[0]</span> = true;
+                        </div>
                         <div class="code-line" id="p0-line-2"><span class="cv" id="p0-cv-turn">turn</span> = 1;</div>
-                        <div class="code-line" id="p0-line-3">while (<span class="cv" id="p0-cv-flag1">flag[1]</span> && <span class="cv" id="p0-cv-turn-cond">turn == 1</span>) {</div>
+                        <div class="code-line" id="p0-line-3">while (<span class="cv" id="p0-cv-flag1">flag[1]</span> &&
+                            <span class="cv" id="p0-cv-turn-cond">turn == 1</span>) {
+                        </div>
                         <div class="code-line" id="p0-line-4">&nbsp;&nbsp;// busy wait</div>
                         <div class="code-line" id="p0-line-5">}</div>
                         <div class="code-line cs-line" id="p0-line-6">// CRITICAL SECTION</div>
-                        <div class="code-line" id="p0-line-7"><span class="cv" id="p0-cv-flag0-exit">flag[0]</span> = false;</div>
+                        <div class="code-line" id="p0-line-7"><span class="cv" id="p0-cv-flag0-exit">flag[0]</span> =
+                            false;</div>
                     </div>
                     <div class="process-controls">
                         <button id="btn-step-p0" class="btn action-btn">Step P0</button>
@@ -104,13 +123,17 @@
                         </div>
                     </div>
                     <div class="code-view">
-                        <div class="code-line" id="p1-line-1"><span class="cv" id="p1-cv-flag1">flag[1]</span> = true;</div>
+                        <div class="code-line" id="p1-line-1"><span class="cv" id="p1-cv-flag1">flag[1]</span> = true;
+                        </div>
                         <div class="code-line" id="p1-line-2"><span class="cv" id="p1-cv-turn">turn</span> = 0;</div>
-                        <div class="code-line" id="p1-line-3">while (<span class="cv" id="p1-cv-flag0">flag[0]</span> && <span class="cv" id="p1-cv-turn-cond">turn == 0</span>) {</div>
+                        <div class="code-line" id="p1-line-3">while (<span class="cv" id="p1-cv-flag0">flag[0]</span> &&
+                            <span class="cv" id="p1-cv-turn-cond">turn == 0</span>) {
+                        </div>
                         <div class="code-line" id="p1-line-4">&nbsp;&nbsp;// busy wait</div>
                         <div class="code-line" id="p1-line-5">}</div>
                         <div class="code-line cs-line" id="p1-line-6">// CRITICAL SECTION</div>
-                        <div class="code-line" id="p1-line-7"><span class="cv" id="p1-cv-flag1-exit">flag[1]</span> = false;</div>
+                        <div class="code-line" id="p1-line-7"><span class="cv" id="p1-cv-flag1-exit">flag[1]</span> =
+                            false;</div>
                     </div>
                     <div class="process-controls">
                         <button id="btn-step-p1" class="btn action-btn">Step P1</button>
@@ -177,17 +200,26 @@
                         </div>
                     </div>
                     <div class="code-view">
-                        <div class="code-line" id="cas-p0-line-1"><span class="cv" id="cas-p0-cv-waiting">waiting[0]</span> = true;</div>
-                        <div class="code-line" id="cas-p0-line-2"><span class="cv" id="cas-p0-cv-key-init">key</span> = 1;</div>
-                        <div class="code-line" id="cas-p0-line-3">while(<span class="cv" id="cas-p0-cv-waiting-cond">waiting[0]</span> && <span class="cv" id="cas-p0-cv-key-cond">key == 1</span>)</div>
-                        <div class="code-line" id="cas-p0-line-4">&nbsp;&nbsp;<span class="cv" id="cas-p0-cv-key-cas">key</span> = CAS(&lock, 0, 1);</div>
-                        <div class="code-line" id="cas-p0-line-5"><span class="cv" id="cas-p0-cv-waiting-exit">waiting[0]</span> = false;</div>
+                        <div class="code-line" id="cas-p0-line-1"><span class="cv"
+                                id="cas-p0-cv-waiting">waiting[0]</span> = true;</div>
+                        <div class="code-line" id="cas-p0-line-2"><span class="cv" id="cas-p0-cv-key-init">key</span> =
+                            1;</div>
+                        <div class="code-line" id="cas-p0-line-3">while(<span class="cv"
+                                id="cas-p0-cv-waiting-cond">waiting[0]</span> && <span class="cv"
+                                id="cas-p0-cv-key-cond">key == 1</span>)</div>
+                        <div class="code-line" id="cas-p0-line-4">&nbsp;&nbsp;<span class="cv"
+                                id="cas-p0-cv-key-cas">key</span> = CAS(&lock, 0, 1);</div>
+                        <div class="code-line" id="cas-p0-line-5"><span class="cv"
+                                id="cas-p0-cv-waiting-exit">waiting[0]</span> = false;</div>
                         <div class="code-line cs-line" id="cas-p0-line-6">// CRITICAL SECTION</div>
                         <div class="code-line" id="cas-p0-line-7">j = (0 + 1) % 3;</div>
-                        <div class="code-line" id="cas-p0-line-8">while((j != 0) && !<span class="cv" id="cas-p0-cv-waitj">waiting[j]</span>)</div>
+                        <div class="code-line" id="cas-p0-line-8">while((j != 0) && !<span class="cv"
+                                id="cas-p0-cv-waitj">waiting[j]</span>)</div>
                         <div class="code-line" id="cas-p0-line-9">&nbsp;&nbsp;j = (j + 1) % 3;</div>
-                        <div class="code-line" id="cas-p0-line-10">if(j == 0) <span class="cv" id="cas-p0-cv-lock">lock</span> = 0;</div>
-                        <div class="code-line" id="cas-p0-line-11">else <span class="cv" id="cas-p0-cv-waitj-exit">waiting[j]</span> = false;</div>
+                        <div class="code-line" id="cas-p0-line-10">if(j == 0) <span class="cv"
+                                id="cas-p0-cv-lock">lock</span> = 0;</div>
+                        <div class="code-line" id="cas-p0-line-11">else <span class="cv"
+                                id="cas-p0-cv-waitj-exit">waiting[j]</span> = false;</div>
                     </div>
                     <div class="process-controls">
                         <button id="cas-btn-step-p0" class="btn action-btn">Step P0</button>
@@ -208,17 +240,26 @@
                         </div>
                     </div>
                     <div class="code-view">
-                        <div class="code-line" id="cas-p1-line-1"><span class="cv" id="cas-p1-cv-waiting">waiting[1]</span> = true;</div>
-                        <div class="code-line" id="cas-p1-line-2"><span class="cv" id="cas-p1-cv-key-init">key</span> = 1;</div>
-                        <div class="code-line" id="cas-p1-line-3">while(<span class="cv" id="cas-p1-cv-waiting-cond">waiting[1]</span> && <span class="cv" id="cas-p1-cv-key-cond">key == 1</span>)</div>
-                        <div class="code-line" id="cas-p1-line-4">&nbsp;&nbsp;<span class="cv" id="cas-p1-cv-key-cas">key</span> = CAS(&lock, 0, 1);</div>
-                        <div class="code-line" id="cas-p1-line-5"><span class="cv" id="cas-p1-cv-waiting-exit">waiting[1]</span> = false;</div>
+                        <div class="code-line" id="cas-p1-line-1"><span class="cv"
+                                id="cas-p1-cv-waiting">waiting[1]</span> = true;</div>
+                        <div class="code-line" id="cas-p1-line-2"><span class="cv" id="cas-p1-cv-key-init">key</span> =
+                            1;</div>
+                        <div class="code-line" id="cas-p1-line-3">while(<span class="cv"
+                                id="cas-p1-cv-waiting-cond">waiting[1]</span> && <span class="cv"
+                                id="cas-p1-cv-key-cond">key == 1</span>)</div>
+                        <div class="code-line" id="cas-p1-line-4">&nbsp;&nbsp;<span class="cv"
+                                id="cas-p1-cv-key-cas">key</span> = CAS(&lock, 0, 1);</div>
+                        <div class="code-line" id="cas-p1-line-5"><span class="cv"
+                                id="cas-p1-cv-waiting-exit">waiting[1]</span> = false;</div>
                         <div class="code-line cs-line" id="cas-p1-line-6">// CRITICAL SECTION</div>
                         <div class="code-line" id="cas-p1-line-7">j = (1 + 1) % 3;</div>
-                        <div class="code-line" id="cas-p1-line-8">while((j != 1) && !<span class="cv" id="cas-p1-cv-waitj">waiting[j]</span>)</div>
+                        <div class="code-line" id="cas-p1-line-8">while((j != 1) && !<span class="cv"
+                                id="cas-p1-cv-waitj">waiting[j]</span>)</div>
                         <div class="code-line" id="cas-p1-line-9">&nbsp;&nbsp;j = (j + 1) % 3;</div>
-                        <div class="code-line" id="cas-p1-line-10">if(j == 1) <span class="cv" id="cas-p1-cv-lock">lock</span> = 0;</div>
-                        <div class="code-line" id="cas-p1-line-11">else <span class="cv" id="cas-p1-cv-waitj-exit">waiting[j]</span> = false;</div>
+                        <div class="code-line" id="cas-p1-line-10">if(j == 1) <span class="cv"
+                                id="cas-p1-cv-lock">lock</span> = 0;</div>
+                        <div class="code-line" id="cas-p1-line-11">else <span class="cv"
+                                id="cas-p1-cv-waitj-exit">waiting[j]</span> = false;</div>
                     </div>
                     <div class="process-controls">
                         <button id="cas-btn-step-p1" class="btn action-btn">Step P1</button>
@@ -239,17 +280,26 @@
                         </div>
                     </div>
                     <div class="code-view">
-                        <div class="code-line" id="cas-p2-line-1"><span class="cv" id="cas-p2-cv-waiting">waiting[2]</span> = true;</div>
-                        <div class="code-line" id="cas-p2-line-2"><span class="cv" id="cas-p2-cv-key-init">key</span> = 1;</div>
-                        <div class="code-line" id="cas-p2-line-3">while(<span class="cv" id="cas-p2-cv-waiting-cond">waiting[2]</span> && <span class="cv" id="cas-p2-cv-key-cond">key == 1</span>)</div>
-                        <div class="code-line" id="cas-p2-line-4">&nbsp;&nbsp;<span class="cv" id="cas-p2-cv-key-cas">key</span> = CAS(&lock, 0, 1);</div>
-                        <div class="code-line" id="cas-p2-line-5"><span class="cv" id="cas-p2-cv-waiting-exit">waiting[2]</span> = false;</div>
+                        <div class="code-line" id="cas-p2-line-1"><span class="cv"
+                                id="cas-p2-cv-waiting">waiting[2]</span> = true;</div>
+                        <div class="code-line" id="cas-p2-line-2"><span class="cv" id="cas-p2-cv-key-init">key</span> =
+                            1;</div>
+                        <div class="code-line" id="cas-p2-line-3">while(<span class="cv"
+                                id="cas-p2-cv-waiting-cond">waiting[2]</span> && <span class="cv"
+                                id="cas-p2-cv-key-cond">key == 1</span>)</div>
+                        <div class="code-line" id="cas-p2-line-4">&nbsp;&nbsp;<span class="cv"
+                                id="cas-p2-cv-key-cas">key</span> = CAS(&lock, 0, 1);</div>
+                        <div class="code-line" id="cas-p2-line-5"><span class="cv"
+                                id="cas-p2-cv-waiting-exit">waiting[2]</span> = false;</div>
                         <div class="code-line cs-line" id="cas-p2-line-6">// CRITICAL SECTION</div>
                         <div class="code-line" id="cas-p2-line-7">j = (2 + 1) % 3;</div>
-                        <div class="code-line" id="cas-p2-line-8">while((j != 2) && !<span class="cv" id="cas-p2-cv-waitj">waiting[j]</span>)</div>
+                        <div class="code-line" id="cas-p2-line-8">while((j != 2) && !<span class="cv"
+                                id="cas-p2-cv-waitj">waiting[j]</span>)</div>
                         <div class="code-line" id="cas-p2-line-9">&nbsp;&nbsp;j = (j + 1) % 3;</div>
-                        <div class="code-line" id="cas-p2-line-10">if(j == 2) <span class="cv" id="cas-p2-cv-lock">lock</span> = 0;</div>
-                        <div class="code-line" id="cas-p2-line-11">else <span class="cv" id="cas-p2-cv-waitj-exit">waiting[j]</span> = false;</div>
+                        <div class="code-line" id="cas-p2-line-10">if(j == 2) <span class="cv"
+                                id="cas-p2-cv-lock">lock</span> = 0;</div>
+                        <div class="code-line" id="cas-p2-line-11">else <span class="cv"
+                                id="cas-p2-cv-waitj-exit">waiting[j]</span> = false;</div>
                     </div>
                     <div class="process-controls">
                         <button id="cas-btn-step-p2" class="btn action-btn">Step P2</button>
@@ -265,6 +315,27 @@
             </div>
         </main>
     </div>
+
+    <!-- Guiding Popup Modal -->
+    <div id="guide-modal" class="modal-overlay">
+        <div class="modal-content glass-panel">
+            <h2>Welcome to the Simulator</h2>
+            <p>This interactive tool helps you understand mutual exclusion algorithms step-by-step.</p>
+            <div class="guide-legend">
+                <div class="legend-item">
+                    <span class="legend-color pass-color"></span>
+                    <p><strong>Green Highlight:</strong> No blocking condition.</p>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color block-color"></span>
+                    <p><strong>Red Highlight:</strong> Leads to blocking.</p>
+                </div>
+            </div>
+            <p class="guide-tip">Tip: Press "Step" to see how variables affect the program flow.</p>
+            <button class="btn primary" onclick="closeGuideModal()">Acknowledge</button>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script src="cas-script.js"></script>
     <script>
@@ -274,6 +345,11 @@
             document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
         }
+
+        function closeGuideModal() {
+            document.getElementById('guide-modal').classList.add('hidden');
+        }
     </script>
 </body>
+
 </html>

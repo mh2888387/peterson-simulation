@@ -69,12 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const yellowLight = semaphore.querySelector('.yellow');
         const greenLight = semaphore.querySelector('.green');
         const pc = state.pc[pid];
-        
+
         panel.classList.remove('active', 'in-cs');
         redLight.classList.remove('active');
         yellowLight.classList.remove('active');
         greenLight.classList.remove('active');
-        
+
         if (pc === 1 || pc === 2) {
             statusEl.textContent = 'Want to enter';
             statusEl.style.color = '#60a5fa';
@@ -105,9 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateCSVisuals() {
         const inCs0 = state.pc[0] === 6;
         const inCs1 = state.pc[1] === 6;
-        
+
         DOM.csBox.className = 'cs-box';
-        
+
         if (inCs0) {
             DOM.csBox.classList.add('occupied-p0');
             DOM.csBox.innerHTML = '<div class="occupant p0">P0 in CS</div>';
@@ -123,14 +123,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const el = document.getElementById(`${varId}-box`);
         const marker = document.getElementById(`marker-${varId}`);
         el.classList.add('highlight');
-        
+
         if (marker && pid !== undefined) {
             marker.textContent = `← P${pid} ${action}`;
             marker.style.color = pid === 0 ? '#60a5fa' : '#fbbf24';
             marker.classList.add('show');
             setTimeout(() => marker.classList.remove('show'), 800);
         }
-        
+
         setTimeout(() => el.classList.remove('highlight'), 500);
     }
 
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const other = 1 - pid;
         let nextPc = state.pc[pid];
 
-        switch(state.pc[pid]) {
+        switch (state.pc[pid]) {
             case 1: // flag[pid] = true
                 state.flag[pid] = true;
                 highlightVar(`flag${pid}`, pid, 'writing');
@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
             DOM.btnAuto.classList.add('primary');
             DOM.btnStepP0.disabled = true;
             DOM.btnStepP1.disabled = true;
-            
+
             state.autoPlayInterval = setInterval(() => {
                 // Randomly pick a process to step, biased towards the one not waiting
                 let pick = Math.random() > 0.5 ? 0 : 1;
