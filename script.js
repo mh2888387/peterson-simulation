@@ -1,0 +1,197 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const DOM = {
+        flag0: document.getElementById('flag0-val'),
+        flag1: document.getElementById('flag1-val'),
+        turn: document.getElementById('turn-val'),
+        flag0Box: document.getElementById('flag0-box'),
+        flag1Box: document.getElementById('flag1-box'),
+        turnBox: document.getElementById('turn-box'),
+        p0Status: document.getElementById('p0-status'),
+        p1Status: document.getElementById('p1-status'),
+        btnStepP0: document.getElementById('btn-step-p0'),
+        btnStepP1: document.getElementById('btn-step-p1'),
+        btnReset: document.getElementById('btn-reset'),
+        btnAuto: document.getElementById('btn-auto'),
+        csBox: document.getElementById('cs-box'),
+        p0Panel: document.getElementById('p0-panel'),
+        p1Panel: document.getElementById('p1-panel')
+    };
+
+    let state = {
+        flag: [false, false],
+        turn: 0,
+        pc: [1, 1],
+        autoPlayInterval: null
+    };
+
+    function updateUI() {
+        // Update variables
+        DOM.flag0.textContent = state.flag[0].toString();
+        DOM.flag1.textContent = state.flag[1].toString();
+        DOM.turn.textContent = state.turn.toString();
+
+        // Reset all code highlights
+        document.querySelectorAll('.code-line').forEach(el => {
+            el.classList.remove('active', 'wait', 'cs-active');
+        });
+
+        // Highlight current PC for P0
+        if (state.pc[0] > 0) {
+            const line0 = document.getElementById(`p0-line-${state.pc[0]}`);
+            if (line0) {
+                if (state.pc[0] === 4) line0.classList.add('wait');
+                else if (state.pc[0] === 6) line0.classList.add('cs-active');
+                else line0.classList.add('active');
+            }
+        }
+
+        // Highlight current PC for P1
+        if (state.pc[1] > 0) {
+            const line1 = document.getElementById(`p1-line-${state.pc[1]}`);
+            if (line1) {
+                if (state.pc[1] === 4) line1.classList.add('wait');
+                else if (state.pc[1] === 6) line1.classList.add('cs-active');
+                else line1.classList.add('active');
+            }
+        }
+
+        // Update status and CS visuals
+        updateStatusVisuals(0);
+        updateStatusVisuals(1);
+        updateCSVisuals();
+    }
+
+    function updateStatusVisuals(pid) {
+        const statusEl = pid === 0 ? DOM.p0Status : DOM.p1Status;
+        const panel = pid === 0 ? DOM.p0Panel : DOM.p1Panel;
+        const pc = state.pc[pid];
+        
+        panel.classList.remove('active', 'in-cs');
+        
+        if (pc === 1 || pc === 2) {
+            statusEl.textContent = 'Want to enter';
+            statusEl.style.color = '#60a5fa';
+            panel.classList.add('active');
+        } else if (pc === 3 || pc === 4) {
+            statusEl.textContent = 'Waiting';
+            statusEl.style.color = '#f87171';
+            panel.classList.add('active');
+        } else if (pc === 6) {
+            statusEl.textContent = 'In CS';
+            statusEl.style.color = '#34d399';
+            panel.classList.add('in-cs');
+        } else if (pc === 7) {
+            statusEl.textContent = 'Exiting';
+            statusEl.style.color = '#a78bfa';
+            panel.classList.add('active');
+        } else {
+            statusEl.textContent = 'Idle';
+            statusEl.style.color = 'inherit';
+        }
+    }
+
+    function updateCSVisuals() {
+        const inCs0 = state.pc[0] === 6;
+        const inCs1 = state.pc[1] === 6;
+        
+        DOM.csBox.className = 'cs-box';
+        
+        if (inCs0) {
+            DOM.csBox.classList.add('occupied-p0');
+            DOM.csBox.innerHTML = '<div class="occupant p0">P0 in CS</div>';
+        } else if (inCs1) {
+            DOM.csBox.classList.add('occupied-p1');
+            DOM.csBox.innerHTML = '<div class="occupant p1">P1 in CS</div>';
+        } else {
+            DOM.csBox.innerHTML = '<div class="cs-empty-text">Empty</div>';
+        }
+    }
+
+    function highlightVar(varId) {
+        const el = document.getElementById(`${varId}-box`);
+        el.classList.add('highlight');
+        setTimeout(() => el.classList.remove('highlight'), 500);
+    }
+
+    function stepProcess(pid) {
+        const other = 1 - pid;
+        let nextPc = state.pc[pid];
+
+        switch(state.pc[pid]) {
+            case 1: // flag[pid] = true
+                state.flag[pid] = true;
+                highlightVar(`flag${pid}`);
+                nextPc = 2;
+                break;
+            case 2: // turn = other
+                state.turn = other;
+                highlightVar('turn');
+                nextPc = 3;
+                break;
+            case 3: // while (flag[other] && turn == other)
+                if (state.flag[other] && state.turn === other) {
+                    nextPc = 4; // go to wait
+                } else {
+                    nextPc = 6; // enter CS
+                }
+                break;
+            case 4: // wait loop body
+                nextPc = 3; // go back to while condition
+                break;
+            case 6: // In CS
+                nextPc = 7;
+                break;
+            case 7: // flag[pid] = false
+                state.flag[pid] = false;
+                highlightVar(`flag${pid}`);
+                nextPc = 1; // Loop back to start
+                break;
+        }
+
+        state.pc[pid] = nextPc;
+        updateUI();
+    }
+
+    DOM.btnStepP0.addEventListener('click', () => stepProcess(0));
+    DOM.btnStepP1.addEventListener('click', () => stepProcess(1));
+
+    DOM.btnReset.addEventListener('click', () => {
+        state = {
+            flag: [false, false],
+            turn: 0,
+            pc: [1, 1],
+            autoPlayInterval: state.autoPlayInterval
+        };
+        updateUI();
+        highlightVar('flag0');
+        highlightVar('flag1');
+        highlightVar('turn');
+    });
+
+    DOM.btnAuto.addEventListener('click', () => {
+        if (state.autoPlayInterval) {
+            clearInterval(state.autoPlayInterval);
+            state.autoPlayInterval = null;
+            DOM.btnAuto.textContent = 'Auto Play: Off';
+            DOM.btnAuto.classList.remove('primary');
+            DOM.btnAuto.classList.add('secondary');
+            DOM.btnStepP0.disabled = false;
+            DOM.btnStepP1.disabled = false;
+        } else {
+            DOM.btnAuto.textContent = 'Auto Play: On';
+            DOM.btnAuto.classList.remove('secondary');
+            DOM.btnAuto.classList.add('primary');
+            DOM.btnStepP0.disabled = true;
+            DOM.btnStepP1.disabled = true;
+            
+            state.autoPlayInterval = setInterval(() => {
+                // Randomly pick a process to step, biased towards the one not waiting
+                let pick = Math.random() > 0.5 ? 0 : 1;
+                stepProcess(pick);
+            }, 800);
+        }
+    });
+
+    // Initial render
+    updateUI();
+});

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peterson's Solution Simulator</title>
+    <meta name="description" content="An interactive visualization of Peterson's Solution for mutual exclusion in Operating Systems.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Peterson's Solution Simulator</h1>
+            <p>Interactive GUI animation to understand mutual exclusion</p>
+        </header>
+
+        <main class="simulation-layout">
+            <div class="shared-memory glass-panel">
+                <h2>Shared Memory</h2>
+                <div class="variables">
+                    <div class="var-box" id="flag0-box">
+                        <span class="var-name">flag[0]</span>
+                        <span class="var-value" id="flag0-val">false</span>
+                    </div>
+                    <div class="var-box" id="turn-box">
+                        <span class="var-name">turn</span>
+                        <span class="var-value" id="turn-val">0</span>
+                    </div>
+                    <div class="var-box" id="flag1-box">
+                        <span class="var-name">flag[1]</span>
+                        <span class="var-value" id="flag1-val">false</span>
+                    </div>
+                </div>
+                <div class="global-controls">
+                    <button id="btn-reset" class="btn primary">Reset Simulation</button>
+                    <button id="btn-auto" class="btn secondary">Auto Play: Off</button>
+                </div>
+            </div>
+
+            <div class="processes-area">
+                <!-- Process 0 -->
+                <div class="process-panel glass-panel" id="p0-panel">
+                    <div class="process-header">
+                        <h2>Process 0</h2>
+                        <span class="status-badge" id="p0-status">Idle</span>
+                    </div>
+                    <div class="code-view">
+                        <div class="code-line" id="p0-line-1">flag[0] = true;</div>
+                        <div class="code-line" id="p0-line-2">turn = 1;</div>
+                        <div class="code-line" id="p0-line-3">while (flag[1] && turn == 1) {</div>
+                        <div class="code-line" id="p0-line-4">&nbsp;&nbsp;// busy wait</div>
+                        <div class="code-line" id="p0-line-5">}</div>
+                        <div class="code-line cs-line" id="p0-line-6">// CRITICAL SECTION</div>
+                        <div class="code-line" id="p0-line-7">flag[0] = false;</div>
+                    </div>
+                    <div class="process-controls">
+                        <button id="btn-step-p0" class="btn action-btn">Step P0</button>
+                    </div>
+                </div>
+
+                <!-- Critical Section Visual -->
+                <div class="critical-section-container">
+                    <div class="cs-label">Critical Section</div>
+                    <div class="cs-box" id="cs-box">
+                        <div class="cs-empty-text">Empty</div>
+                    </div>
+                </div>
+
+                <!-- Process 1 -->
+                <div class="process-panel glass-panel" id="p1-panel">
+                    <div class="process-header">
+                        <h2>Process 1</h2>
+                        <span class="status-badge" id="p1-status">Idle</span>
+                    </div>
+                    <div class="code-view">
+                        <div class="code-line" id="p1-line-1">flag[1] = true;</div>
+                        <div class="code-line" id="p1-line-2">turn = 0;</div>
+                        <div class="code-line" id="p1-line-3">while (flag[0] && turn == 0) {</div>
+                        <div class="code-line" id="p1-line-4">&nbsp;&nbsp;// busy wait</div>
+                        <div class="code-line" id="p1-line-5">}</div>
+                        <div class="code-line cs-line" id="p1-line-6">// CRITICAL SECTION</div>
+                        <div class="code-line" id="p1-line-7">flag[1] = false;</div>
+                    </div>
+                    <div class="process-controls">
+                        <button id="btn-step-p1" class="btn action-btn">Step P1</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
