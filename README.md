@@ -1,35 +1,39 @@
-# Peterson's Solution Simulator
+# Mutual Exclusion Simulators
 
-An interactive, visual simulation to help students understand **Peterson's Solution** for mutual exclusion in Operating Systems. The application is built entirely with vanilla web technologies (HTML, CSS, JavaScript) and features a modern, aesthetic user interface.
+An interactive, visual simulation to help students understand concurrent programming algorithms for mutual exclusion in Operating Systems. This application covers both **Peterson's Solution** (2 processes) and **Bounded-Waiting Compare And Swap (CAS)** (3 processes). 
+
+Built entirely with vanilla web technologies (HTML, CSS, JavaScript), it features a highly modern, fluid, and responsive user interface designed for maximum pedagogical clarity.
 
 ## 🚀 Features
-- **Interactive Execution**: Manually step through Process 0 and Process 1 line-by-line.
-- **Auto-Play Simulation**: Watch the algorithm execute dynamically with randomly randomized process scheduling to test the mutual exclusion constraints in real-time.
-- **Live Memory Visualization**: See real-time updates for shared memory variables (`flag[0]`, `flag[1]`, `turn`).
-- **Code Highlighting**: The currently executing line of code is highlighted. Different colors denote distinct execution states (active execution, busy waiting loop, critical section entry).
-- **Aesthetic GUI**: Modern "glassmorphism" design providing an intuitive and pleasing learning environment.
+
+- **Dual Algorithms**: Switch seamlessly between Peterson's Solution and a 3-process Bounded-Waiting CAS algorithm via top navigation tabs.
+- **Interactive Execution**: Manually step through each process line-by-line to understand scheduling and race conditions.
+- **Auto-Play Simulation**: Watch the algorithms execute dynamically with randomized process scheduling to test the mutual exclusion constraints in real-time.
+- **Live Memory Visualization**: See real-time horizontal stack updates for shared memory variables (`flag`, `turn`, `waiting`, `key`, `lock`) with visual indicator arrows pointing to active memory writes/reads.
+- **Persistent Visual Feedback (Code Highlighting)**: The simulator intelligently highlights variables inside the code in real-time:
+  - 🟩 **Green Glow**: The condition is met, and the process is allowed to proceed (e.g., entering the Critical Section).
+  - 🟥 **Red Glow**: The condition is unmet, causing the process to block (e.g., spinning in a `while` loop).
+  - Highlights stay visible until the next step to allow students sufficient time to analyze the state.
+- **Inline Value Tooltips**: Floating data tags (e.g., `=true`, `=0`) instantly pop up next to highlighted variables inside the code, allowing you to trace exact memory states without taking your eyes off the algorithm.
+- **Fully Fluid Responsive UI**: Uses advanced CSS viewport clamping to scale proportionally. The entire interface flawlessly stretches and shrinks to fit anything from small laptop screens to ultra-wide monitors.
 
 ## 📁 Project Structure
-- `index.html`: The structural markup and layout of the simulator.
-- `style.css`: The styling, themes, and micro-animations driving the visual layout.
-- `script.js`: The underlying state machine executing Peterson's algorithm logic.
+
+- `index.html`: The structural markup, containing the layout and code views for both simulators.
+- `style.css`: The styling, glassmorphism themes, fluid typography, and micro-animations driving the aesthetic layout.
+- `script.js`: The state machine executing Peterson's algorithm logic.
+- `cas-script.js`: The state machine executing the 3-process Bounded-Waiting CAS algorithm logic.
 
 ## 💻 How to Run
+
 Since this is built with vanilla web technologies, there are no dependencies or build steps required.
 1. Open the project folder.
-2. Double-click the `index.html` file to open it in your preferred web browser (e.g., Chrome, Edge, Firefox).
+2. Double-click the `index.html` file to open it in your preferred modern web browser (e.g., Chrome, Edge, Firefox).
 
-## 🧠 About Peterson's Solution
-Peterson's Solution is a classic concurrent programming algorithm for **mutual exclusion** that allows two processes to share a single-use resource without conflict. 
+## 🧠 About the Algorithms
 
-It guarantees three essential conditions of synchronization:
-1. **Mutual Exclusion**: Only one process can execute inside the critical section at a given time.
-2. **Progress**: If no process is in the critical section and some processes wish to enter, they cannot be postponed indefinitely.
-3. **Bounded Waiting**: After a process requests entry to the critical section, there is a limit on the number of times other processes are allowed to enter before the request is granted.
+### Peterson's Solution (2 Processes)
+A classic software-based solution that guarantees mutual exclusion, progress, and bounded waiting. It utilizes two shared variables (`flag` and `turn`). A process sets its `flag` to true to indicate desire, but graciously hands over the `turn` to the other process, spinning in a `while` loop until it is safe to proceed.
 
-### Algorithm Breakdown
-The algorithm utilizes two shared variables:
-- `flag[i] = true`: Indicates that Process `i` wants to enter the Critical Section.
-- `turn`: Determines whose turn it is to enter the Critical Section if both processes want to enter simultaneously.
-
-A process sets its `flag` to true to indicate its desire, but graciously hands over the `turn` to the other process. It then waits in a `while` loop until either the other process is no longer interested (`flag[other] == false`), or it is currently its own turn (`turn == i`).
+### Bounded-Waiting Compare And Swap (3 Processes)
+A hardware-assisted synchronization approach utilizing atomic `CAS(&lock, expected, new)` instructions. While standard CAS guarantees mutual exclusion, it does not inherently guarantee bounded waiting (a process could starve). This specific algorithm introduces an array of `waiting` flags to enforce a strict queue-like system, ensuring that no process waits indefinitely while others continuously enter the critical section.
