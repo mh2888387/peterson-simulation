@@ -134,11 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => el.classList.remove('highlight'), 500);
     }
 
-    function glowVar(id, type) {
+    function glowVar(id, type, val) {
         const el = document.getElementById(id);
         if (!el) return;
         el.classList.remove('glow-pass', 'glow-block');
         void el.offsetWidth;
+        if (val !== undefined) el.setAttribute('data-value', String(val));
         el.classList.add(type === 'pass' ? 'glow-pass' : 'glow-block');
     }
 
@@ -153,16 +154,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // flag[other]: true = blocking, false = passing
             if (state.flag[other]) {
-                glowVar(`p${i}-cv-flag${other}`, 'block');
+                glowVar(`p${i}-cv-flag${other}`, 'block', true);
             } else {
-                glowVar(`p${i}-cv-flag${other}`, 'pass');
+                glowVar(`p${i}-cv-flag${other}`, 'pass', false);
             }
 
             // turn == other: true = blocking, false = passing
             if (state.turn === other) {
-                glowVar(`p${i}-cv-turn-cond`, 'block');
+                glowVar(`p${i}-cv-turn-cond`, 'block', state.turn);
             } else {
-                glowVar(`p${i}-cv-turn-cond`, 'pass');
+                glowVar(`p${i}-cv-turn-cond`, 'pass', state.turn);
             }
         }
     }

@@ -85,25 +85,29 @@ header p {
 
 .memory-stack {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     border: 1px solid var(--panel-border);
     border-radius: 0.5rem;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.4);
-    min-width: 350px;
+    width: 100%;
 }
 
 .mem-cell {
     display: flex;
+    flex-direction: column;
     align-items: center;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--panel-border);
+    border-right: 1px solid var(--panel-border);
+    border-bottom: none;
     transition: all 0.2s;
     position: relative;
+    flex: 1;
 }
 
 .mem-cell:last-child {
-    border-bottom: none;
+    border-right: none;
 }
 
 .mem-cell.highlight {
@@ -115,14 +119,16 @@ header p {
     font-family: var(--font-code);
     color: var(--text-secondary);
     font-size: 0.8rem;
-    margin-right: 1.5rem;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
     opacity: 0.7;
 }
 
 .mem-content {
     display: flex;
     flex-direction: column;
-    width: 100px;
+    align-items: center;
+    width: auto;
 }
 
 .var-name {
@@ -136,21 +142,23 @@ header p {
     font-weight: 700;
     font-size: 1.1rem;
     color: var(--accent-blue);
+    margin-top: 0.25rem;
 }
 
 .mem-marker {
-    margin-left: auto;
+    margin-top: 0.5rem;
+    margin-left: 0;
     font-family: var(--font-code);
     font-size: 0.85rem;
     font-weight: 600;
     opacity: 0;
     transition: opacity 0.2s, transform 0.2s;
-    transform: translateX(-10px);
+    transform: translateY(-10px);
 }
 
 .mem-marker.show {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
 }
 
 .global-controls {
@@ -629,4 +637,40 @@ header p {
     font-size: 0.95rem;
     color: var(--text-secondary);
     font-weight: 600;
+}
+
+.cv {
+    position: relative;
+}
+
+.cv.glow-pass::after,
+.cv.glow-block::after {
+    content: "=" attr(data-value);
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-family: var(--font-code);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+    animation: popupFade 0.2s ease-out forwards;
+}
+
+@keyframes popupFade {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 }

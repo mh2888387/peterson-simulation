@@ -70,11 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function glowVar(id, type) {
+    function glowVar(id, type, val) {
         const el = document.getElementById(id);
         if (!el) return;
         el.classList.remove('glow-pass', 'glow-block');
         void el.offsetWidth;
+        if (val !== undefined) el.setAttribute('data-value', val);
         el.classList.add(type === 'pass' ? 'glow-pass' : 'glow-block');
     }
 
@@ -82,19 +83,19 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < 3; i++) {
             // While loop: while(waiting[i] && key == 1)
             // waiting[i] in condition: true = blocking, false = passing
-            glowVar(`cas-p${i}-cv-waiting-cond`, state.waiting[i] ? 'block' : 'pass');
+            glowVar(`cas-p${i}-cv-waiting-cond`, state.waiting[i] ? 'block' : 'pass', state.waiting[i]);
 
             // key == 1 in condition: key=1 means blocking (stays in loop), key=0 means passing (exits loop)
-            glowVar(`cas-p${i}-cv-key-cond`, state.key[i] === 1 ? 'block' : 'pass');
+            glowVar(`cas-p${i}-cv-key-cond`, state.key[i] === 1 ? 'block' : 'pass', state.key[i]);
 
             // key on the CAS line: after CAS, key=0 means lock acquired (pass), key=1 means failed (block)
-            glowVar(`cas-p${i}-cv-key-cas`, state.key[i] === 0 ? 'pass' : 'block');
+            glowVar(`cas-p${i}-cv-key-cas`, state.key[i] === 0 ? 'pass' : 'block', state.key[i]);
 
             // waiting[j] in exit loop: waiting[j]=true means found a waiter (pass/hand off), false means keep scanning (block)
             if (state.pc[i] >= 8 && state.pc[i] <= 9) {
                 const j = state.j[i];
                 if (j !== i) {
-                    glowVar(`cas-p${i}-cv-waitj`, state.waiting[j] ? 'pass' : 'block');
+                    glowVar(`cas-p${i}-cv-waitj`, state.waiting[j] ? 'pass' : 'block', state.waiting[j]);
                 }
             }
         }
