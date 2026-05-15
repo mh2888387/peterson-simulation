@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Randomly pick a process to step, biased towards the one not waiting
                 let pick = Math.random() > 0.5 ? 0 : 1;
                 stepProcess(pick);
-            }, 800);
+            }, 1500);
         }
     });
 

@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
             state.autoPlayInterval = setInterval(() => {
                 let pick = Math.floor(Math.random() * 3);
                 stepProcess(pick);
-            }, 600);
+            }, 1500);
         }
     });
 
