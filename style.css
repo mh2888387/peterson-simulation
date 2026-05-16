@@ -70,6 +70,9 @@ header p {
     border-radius: 1rem;
     padding: 1.5rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    /* Hardware acceleration to prevent lag */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 .shared-memory {
@@ -162,7 +165,7 @@ header p {
 
 .mem-marker.show {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) translateZ(0);
 }
 
 .global-controls {
@@ -330,6 +333,8 @@ header p {
     color: #cbd5e1;
     border-left: 3px solid transparent;
     transition: background-color 0.2s, color 0.2s, border-left-color 0.2s;
+    transform: translateZ(0);
+    will-change: background-color, border-color, color;
 }
 
 .code-line.active {
@@ -513,6 +518,8 @@ header p {
     border-radius: 3px;
     transition: color 0.3s ease, text-shadow 0.3s ease, background-color 0.3s ease;
     position: relative;
+    transform: translateZ(0);
+    will-change: background-color, text-shadow, color;
 }
 
 .cv.glow-pass {
@@ -654,7 +661,7 @@ header p {
     position: absolute;
     bottom: 110%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateZ(0);
     background: rgba(30, 41, 59, 0.6);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
