@@ -1,6 +1,6 @@
 const tabStates = {
-    'peterson-tab': { 0: 'IDLE', 1: 'IDLE' },
-    'cas-tab': { 0: 'IDLE', 1: 'IDLE', 2: 'IDLE' }
+    'peterson-tab': { 0: { state: 'IDLE', yielding: false }, 1: { state: 'IDLE', yielding: false } },
+    'cas-tab': { 0: { state: 'IDLE', yielding: false }, 1: { state: 'IDLE', yielding: false }, 2: { state: 'IDLE', yielding: false } }
 };
 
 function getActiveCanvasInfo() {
@@ -35,13 +35,19 @@ function initRAG() {
     setTimeout(resize, 100);
 }
 
-window.updateRAGState = function (pid, state) {
+window.updateRAGState = function (pid, state, isYielding = false) {
     const info = getActiveCanvasInfo();
     if (!info) return;
     const tabId = info.tabId;
 
-    if (tabStates[tabId][pid] !== state) {
-        tabStates[tabId][pid] = state;
+    if (!tabStates[tabId]) return;
+    if (typeof tabStates[tabId][pid] !== 'object') {
+        tabStates[tabId][pid] = { state: 'IDLE', yielding: false };
+    }
+
+    if (tabStates[tabId][pid].state !== state || tabStates[tabId][pid].yielding !== isYielding) {
+        tabStates[tabId][pid].state = state;
+        tabStates[tabId][pid].yielding = isYielding;
         drawRAG();
     }
 };
@@ -105,7 +111,9 @@ function drawRAG() {
 
     for (let i = 0; i < numProcesses; i++) {
         const p = pPositions[i];
-        const state = tabStates[info.tabId][i];
+        const pStateObj = tabStates[info.tabId][i];
+        const state = pStateObj ? pStateObj.state : 'IDLE';
+        const isYielding = pStateObj ? pStateObj.yielding : false;
 
         // Draw Directed Edges
         if (state === 'WANT') {
@@ -129,6 +137,37 @@ function drawRAG() {
         ctx.font = '600 16px Inter, sans-serif';
         ctx.textBaseline = 'middle';
         ctx.fillText(p.label, p.x, p.y);
+
+        // Draw Yielding Speech Bubble
+        if (isYielding) {
+            const bubbleText = "I reached, Your turn is next";
+            ctx.font = '500 12px Inter, sans-serif';
+            const textWidth = ctx.measureText(bubbleText).width;
+
+            const bx = p.x;
+            const by = p.y - 45; // Above the node
+
+            // Draw Bubble Background
+            ctx.fillStyle = '#f8fafc';
+            ctx.beginPath();
+            ctx.roundRect(bx - textWidth / 2 - 10, by - 12, textWidth + 20, 24, 8);
+            ctx.fill();
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Draw Pointer
+            ctx.beginPath();
+            ctx.moveTo(bx - 5, by + 12);
+            ctx.lineTo(bx + 5, by + 12);
+            ctx.lineTo(bx, by + 18);
+            ctx.fill();
+
+            // Draw Text
+            ctx.fillStyle = '#0f172a';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(bubbleText, bx, by);
+        }
     }
 }
 

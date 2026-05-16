@@ -109,7 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (typeof window.updateRAGState === 'function') {
-            window.updateRAGState(pid, ragState);
+            const other = 1 - pid;
+            const isYielding = (state.turn === other && (pc === 3 || pc === 4));
+            window.updateRAGState(pid, ragState, isYielding);
         }
     }
 
