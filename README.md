@@ -25,12 +25,6 @@ Built entirely with vanilla web technologies (HTML, CSS, JavaScript), it feature
 - `script.js`: The state machine executing Peterson's algorithm logic.
 - `cas-script.js`: The state machine executing the 3-process Bounded-Waiting CAS algorithm logic.
 
-## 💻 How to Run
-
-Since this is built with vanilla web technologies, there are no dependencies or build steps required.
-1. Open the project folder.
-2. Double-click the `index.html` file to open it in your preferred modern web browser (e.g., Chrome, Edge, Firefox).
-
 ## 🧠 About the Algorithms
 
 ### Peterson's Solution (2 Processes)
