@@ -141,30 +141,41 @@ document.addEventListener('DOMContentLoaded', () => {
         yellowLight.classList.remove('active');
         greenLight.classList.remove('active');
         
+        let ragState = 'IDLE';
+
         if (pc >= 1 && pc <= 2) {
             statusEl.textContent = 'Want to enter';
             statusEl.style.color = '#60a5fa';
             panel.classList.add('active');
             yellowLight.classList.add('active');
+            ragState = pc === 1 ? 'IDLE' : 'WANT';
         } else if (pc === 3 || pc === 4) {
             statusEl.textContent = 'Waiting';
             statusEl.style.color = '#f87171';
             panel.classList.add('active');
             redLight.classList.add('active');
+            ragState = 'WANT';
         } else if (pc === 6) {
             statusEl.textContent = 'In CS';
             statusEl.style.color = '#34d399';
             panel.classList.add('in-cs');
             greenLight.classList.add('active');
+            ragState = 'ENTER';
         } else if (pc >= 7 && pc <= 11) {
             statusEl.textContent = 'Exiting';
             statusEl.style.color = '#a78bfa';
             panel.classList.add('active');
             yellowLight.classList.add('active');
+            ragState = 'ENTER';
         } else {
             statusEl.textContent = 'Idle';
             statusEl.style.color = 'inherit';
             greenLight.classList.add('active');
+            ragState = 'IDLE';
+        }
+        
+        if (typeof window.updateRAGState === 'function') {
+            window.updateRAGState(pid, ragState);
         }
     }
 
@@ -298,12 +309,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (state.autoPlayInterval) {
             clearInterval(state.autoPlayInterval);
             state.autoPlayInterval = null;
-            DOM.btnAuto.textContent = 'Auto Play: Off';
+            DOM.btnAuto.textContent = '▶ Auto Play';
             DOM.btnAuto.classList.remove('primary');
             DOM.btnAuto.classList.add('secondary');
             DOM.btns.forEach(b => b.disabled = false);
         } else {
-            DOM.btnAuto.textContent = 'Auto Play: On';
+            DOM.btnAuto.textContent = '⏸ Pause Auto';
             DOM.btnAuto.classList.remove('secondary');
             DOM.btnAuto.classList.add('primary');
             DOM.btns.forEach(b => b.disabled = true);
